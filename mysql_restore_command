@@ -1,0 +1,3 @@
+corecrest_backup.sql
+
+mysql -u root -p corecrest < corecrest_backup.sql
