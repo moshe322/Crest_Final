@@ -1,6 +1,7 @@
 <?php
 
 include 'includes/db.php';
+
 require_once __DIR__ . '/includes/mail.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -25,28 +26,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
 
-            $mail =
-            new PHPMailer(true);
+            $mail = new PHPMailer(true);
 
             $mail->isSMTP();
 
-            $mail->Host =
-            'smtp.gmail.com';
+            $mail->Host = 'smtp.gmail.com';
 
-            $mail->SMTPAuth =
-            true;
+            $mail->SMTPAuth = true;
 
-            $mail->Username =
-            $mail_username;
+            $mail->Username = $mail_username;
 
-            $mail->Password =
-            $mail_password;
+            $mail->Password = $mail_password;
 
-            $mail->SMTPSecure =
-            PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-            $mail->Port =
-            587;
+            $mail->Port = 587;
 
             $mail->setFrom(
                 $mail_username,
@@ -54,27 +48,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
 
             $mail->addAddress(
+                $mail_username,
+                'CoreCrest Admin'
+            );
+
+            $mail->addReplyTo(
                 $email,
                 $name
             );
 
-            $mail->addReplyTo(
-                $mail_username,
-                'CoreCrest HR'
-            );
-
             $mail->isHTML(true);
 
-            $mail->Subject =
-            'CoreCrest Contact Message Received';
+            $mail->Subject = 'New Contact Message Received';
 
-            $mail->Body =
-            "
-            <h3>Hello $name</h3>
+            $mail->Body = "
+            <h3>New Contact Message Received</h3>
 
-            <p>
-            Your contact message has been received successfully.
-            </p>
+            <p>A user submitted the contact form.</p>
 
             <table border='1'
             cellpadding='5'
@@ -113,22 +103,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $mail->send();
 
-            $message =
-            "Contact details saved successfully! Email sent.";
+            $message = "Contact details saved successfully!";
 
         } catch (Exception $e) {
 
-            $message =
-            "Contact details saved successfully!";
+            $message = "Contact details saved successfully!";
 
             error_log($mail->ErrorInfo);
         }
 
     } else {
 
-        $message =
-        "DB Error: " . mysqli_error($conn);
-
+        $message = "DB Error: " . mysqli_error($conn);
     }
 }
 

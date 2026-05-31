@@ -1,21 +1,192 @@
 <?php
+session_start();
+
+$allowed_email =
+"chagalamarri85@gmail.com";
+
+if(isset($_POST['admin_login'])){
+
+$email =
+trim($_POST['email']);
+
+if(
+$email ==
+$allowed_email
+){
+
+$_SESSION['admin_logged_in'] =
+true;
+
+$_SESSION['admin_email'] =
+$email;
+
+header(
+"Location: admin.php"
+);
+
+exit;
+
+}else{
+
+$login_error =
+"Access Denied";
+
+}
+
+}
+
+if(
+!isset($_SESSION['admin_logged_in'])
+){
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>
+Admin Login
+</title>
+
+<link
+href="assets/vendors/bootstrap/bootstrap.min.css"
+rel="stylesheet">
+
+<style>
+
+body{
+background:#f2edf3;
+font-family:Arial,sans-serif;
+}
+
+.login-box{
+margin-top:120px;
+max-width:420px;
+}
+
+.logo{
+width:120px;
+margin-bottom:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div
+class="container login-box">
+
+<div class="card shadow">
+
+<div class="card-body p-4">
+
+<div class="text-center">
+
+<img
+class="logo"
+src="assets/images/Core-Crest-logo.png">
+
+<h3 class="mb-4">
+
+Admin Login
+
+</h3>
+
+</div>
+
+<?php
+if(isset($login_error)){
+?>
+
+<div class="alert alert-danger">
+
+<?php echo $login_error; ?>
+
+</div>
+
+<?php
+}
+?>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label>
+Enter Admin Email
+</label>
+
+<input
+type="email"
+name="email"
+class="form-control"
+required>
+
+</div>
+
+<button
+type="submit"
+name="admin_login"
+class="btn btn-primary w-100">
+
+Enter
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+<?php
+exit;
+}
+
 require_once __DIR__ . '/includes/db.php';
 
 $total_resumes_result = mysqli_query(
 $conn,
-"SELECT COUNT(*) AS total FROM job_applications WHERE resume IS NOT NULL AND resume != ''"
+"SELECT COUNT(*) AS total
+FROM job_applications
+WHERE resume IS NOT NULL
+AND resume != ''"
 );
 
-$total_resumes = mysqli_fetch_assoc($total_resumes_result);
+$total_resumes =
+mysqli_fetch_assoc(
+$total_resumes_result
+);
 
-$total_required_result = mysqli_query(
+$total_required_result =
+mysqli_query(
 $conn,
-"SELECT COUNT(*) AS total FROM job_applications"
+"SELECT COUNT(*) AS total
+FROM job_applications"
 );
 
-$total_required = mysqli_fetch_assoc($total_required_result);
+$total_required =
+mysqli_fetch_assoc(
+$total_required_result
+);
 
-$total_taken = array(
+$total_taken =
+array(
 "total" => 0
 );
 ?>
@@ -27,31 +198,22 @@ $total_taken = array(
 
 <meta charset="utf-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1">
 
 <title>
 CORECREST HR SERVICES PRIVATE LIMITED
 </title>
 
-<link rel="apple-touch-icon" sizes="57x57" href="assets/images/fav/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="assets/images/fav/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="assets/images/fav/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="assets/images/fav/apple-icon-76x76.png">
-
-<link rel="icon" type="image/png" sizes="32x32" href="assets/images/fav/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="assets/images/fav/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/images/fav/favicon-16x16.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-
 <link href="assets/vendors/bootstrap/bootstrap.min.css" rel="stylesheet">
+
 <link href="assets/vendors/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="assets/vendors/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="assets/vendors/swiper/swiper-bundle.min.css" rel="stylesheet">
-<link href="assets/vendors/aos/aos.css" rel="stylesheet">
+
 <link href="assets/css/style.css" rel="stylesheet">
 
 <link href="https://cdn.datatables.net/2.3.8/css/dataTables.bootstrap5.css" rel="stylesheet">
+
 <link href="https://cdn.datatables.net/responsive/3.0.8/css/responsive.bootstrap5.css" rel="stylesheet">
 
 <style>
@@ -103,7 +265,8 @@ padding:15px;
 
 <header class="admin-header">
 
-<div class="d-flex align-items-center justify-content-between">
+<div
+class="d-flex align-items-center justify-content-between">
 
 <a href="admin.php">
 
@@ -116,7 +279,7 @@ alt="CoreCrestHR">
 
 <a
 class="logout-link"
-href="logout.php">
+href="admin-logout.php">
 
 Logout
 
@@ -130,7 +293,6 @@ Logout
 
 <section
 class="section contact__v2"
-id="contact"
 style="background-color:#f2edf3;">
 
 <div class="container-fluid mb-3">
@@ -149,7 +311,9 @@ Resume Uploaded
 
 <div class="big-text">
 
-<?php echo $total_resumes['total']; ?>
+<?php
+echo $total_resumes['total'];
+?>
 
 </div>
 
@@ -166,12 +330,14 @@ Resume Uploaded
 <div class="card-body">
 
 <h6>
-Action required
+Applications
 </h6>
 
 <div class="big-text">
 
-<?php echo $total_required['total']; ?>
+<?php
+echo $total_required['total'];
+?>
 
 </div>
 
@@ -188,12 +354,12 @@ Action required
 <div class="card-body">
 
 <h6>
-Action Taken
+Admin Access
 </h6>
 
 <div class="big-text">
 
-<?php echo $total_taken['total']; ?>
+1
 
 </div>
 
@@ -247,7 +413,9 @@ $conn,
 
 while(
 $row =
-mysqli_fetch_assoc($applications)
+mysqli_fetch_assoc(
+$applications
+)
 ){
 ?>
 
@@ -303,6 +471,7 @@ class="btn btn-info btn-sm"
 download>
 
 Download
+
 <i class="bi bi-cloud-arrow-down-fill"></i>
 
 </a>
@@ -312,7 +481,9 @@ Download
 ?>
 
 <span class="badge bg-danger">
+
 No Resume
+
 </span>
 
 <?php
@@ -342,9 +513,13 @@ No Resume
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
 <script src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+
 <script src="https://cdn.datatables.net/2.3.8/js/dataTables.bootstrap5.js"></script>
+
 <script src="https://cdn.datatables.net/responsive/3.0.8/js/dataTables.responsive.js"></script>
+
 <script src="https://cdn.datatables.net/responsive/3.0.8/js/responsive.bootstrap5.js"></script>
 
 <script>
