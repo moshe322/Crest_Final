@@ -1,3 +1,38 @@
 corecrest_backup.sql
 
 mysql -u root -p corecrest < corecrest_backup.sql
+
+
+Passwd: Crest@12345
+
+<?php
+$host = "localhost";
+$user = "core";
+$password = "Crest@12345";
+$database = "corectest";
+
+$conn = new mysqli($host, $user, $password, $database);
+
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+?>
+
+
+
+CREATE DATABASE corecrest;
+
+CREATE USER 'core'@'localhost' IDENTIFIED BY 'Crest@12345';
+
+GRANT ALL PRIVILEGES ON corecrest.* TO 'core'@'localhost';
+
+FLUSH PRIVILEGES;
+
+EXIT;
+
+
+
+
+SHOW DATABASES;
+USE corecrest;
+SELECT DATABASE();
